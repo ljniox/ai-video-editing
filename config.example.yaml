@@ -1,0 +1,15 @@
+# AutoEdit configuration (example)
+
+stt_backend: local  # local|lightning
+diarization_backend: none  # none|local|lightning
+vision_backend: none  # none|local|lightning
+
+lightning:
+  base_url: https://your-lightning-endpoint
+  api_key: ${LIGHTNING_API_KEY}
+  timeout_s: 60
+
+storage:
+  provider: local  # local|s3|gcs
+  bucket: your-bucket
+  base_url: https://example.com/presigned

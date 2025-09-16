@@ -1,0 +1,400 @@
+quelle application d'édition de videos existe et est proche de davinci resolve en termes de fonctionnalités tout en étant opensource et disponible dans GitHub public
+
+------
+------
+
+Voici plusieurs **éditeurs vidéo open source**, hébergés publiquement sur GitHub, offrant des fonctionnalités proches de celles de DaVinci Resolve — en particulier dans les domaines du montage non linéaire, de l’étalonnage, des effets, et de la flexibilité :
+
+---
+
+### 1. **Kdenlive**
+
+* Projet mature développé par la communauté KDE, écrit en C++/Qt, disponible sur Linux, macOS et Windows, et distribué sous licence GPL‑3.0 ([Level1Techs Forums][1], [Wikipédia][2]).
+* Il propose montage multi‑piste, keyframe, titres intégrés, chroma‑key, étalonnage, effets audio/vidéo variés, et prise en charge de nombreux formats via FFmpeg ([Wikipédia][2], [AlternativeTo][3]).
+* Très souvent cité comme **l’alternative open source la plus complète à DaVinci Resolve** ([AlternativeTo][3]).
+
+---
+
+### 2. **Shotcut**
+
+* Éditeur cross‑platform (Windows, macOS, Linux) sous licence GPL‑3.0+, basé sur MLT et FFmpeg ([Wikipédia][4]).
+* Timeline non linéaire, support de nombreux formats médias, effets vidéo et audio avancés (incluant color grading, motion tracking, keyframes, GPU/OpenGL, etc.) ([Wikipédia][4]).
+* Recommandé dans des guides open source comme une alternative robuste à DaVinci Resolve ([Alternatives Open Source][5]).
+
+---
+
+### 3. **OpenShot**
+
+* Logiciel open source pour Linux, macOS, Windows. Repos actifs sur GitHub, comme *openshot‑qt* et *libopenshot* ([GitHub][6]).
+* Orienté vers une interface accessible avec des fonctionnalités telles que montage, animations, transitions simples.
+* Bien adapté aux débutants souhaitant un outil simple et gratuit ([TechRadar][7]).
+
+---
+
+### 4. **Olive Video Editor**
+
+* Éditeur vidéo non linéaire moderne, encore en phase alpha (instable) ([GitHub][8]).
+* Son architecture vise une grande flexibilité, configurable, avec pipeline ouvert, destiné aux utilisateurs avancés ([Gist][9]).
+* Une alternative prometteuse qui courtise les workflows professionnels, mais préférable pour les testeurs techniques.
+
+---
+
+### 5. **Natron** – pour le compositing
+
+* Logiciel open source de compositing basé sur une interface **node-based**, proche de Fusion ou Nuke, couvert par la GPL‑2.0 ou ultérieure ([Reddit][10], [Wikipédia][11]).
+* Idéal pour l’étalonnage avancé, le rotoscoping, le tracking, keying, effets visuels, et compatible avec OpenFX, ACES, etc. ([Wikipédia][11]).
+* Plus axé VFX que montage, mais complète bien un workflow type Resolve.
+
+---
+
+### 6. **Flowblade** (Linux uniquement)
+
+* Montage non linéaire open source sous licence GPL, écrit en Python et basé sur MLT/FFmpeg ([Wikipédia][12]).
+* Interface simple mais efficace, bonne gestion des effets audio/vidéo, plugins LADSPA / G’MIC, exports audio vers Ardour ([Wikipédia][12]).
+
+---
+
+### 7. **Extras intéressants**
+
+* **LosslessCut** — pour découper sans perte et assembler des clips rapidement, via FFmpeg. Très utile pour les tâches simples mais **pas comparable à Resolve** pour le montage complet ([Wikipédia][13]).
+* **Blender** — même s’il s’agit avant tout d’un outil de modélisation/animation 3D, il intègre un Video Sequence Editor reconnu dans la communauté comme solution polyvalente ([Reddit][10], [AlternativeTo][3]).
+
+---
+
+### En résumé — Tableau comparatif
+
+| Outil           | Type                     | Proche de Resolve car...                       | Niveau / Remarques                             |
+| --------------- | ------------------------ | ---------------------------------------------- | ---------------------------------------------- |
+| **Kdenlive**    | Montage complet          | Multi-piste, étalonnage, effets, formats       | Très complet, bon équilibre utilisateur/niveau |
+| **Shotcut**     | Montage complet          | Effets avancés, GPU, FFmpeg, color grading     | Très puissant                                  |
+| **OpenShot**    | Montage basique          | Animations, transitions simples                | Idéal débutants                                |
+| **Olive**       | Montage en développement | Flexible, pipeline configurable                | Alpha instable – à tester                      |
+| **Natron**      | Compositing / VFX        | Node-based, keying, tracking, VFX              | Complète un montage                            |
+| **Flowblade**   | Montage Linux            | MLT, effets audio/video                        | Option légère sous Linux                       |
+| **Blender**     | 3D + VSE montage         | Montage vidéo intégré, alternative polyvalente | Courbe d’apprentissage                         |
+| **LosslessCut** | Découpe/trim rapide      | Coupe sans perte                               | Tâches spécifiques, pas un éditeur complet     |
+
+---
+
+### Recommandations selon les besoins :
+
+* **Pour un outil global complet et mature** : **Kdenlive** ou **Shotcut**.
+* **Pour débuter simplement** : **OpenShot**.
+* **Pour ajouter des effets VFX node-based** : **Natron** (en complément).
+* **Pour explorer de nouvelles approches** : gardez un œil sur **Olive**, prometteur mais encore instable.
+* **Si vous êtes sur Linux** et cherchez du léger : **Flowblade**.
+* **Pour des workflows avancés ou 3D + vidéo** : **Blender**.
+* **Pour des tâches rapides de montage fluide** : **LosslessCut**.
+
+---
+
+Souhaiterais-tu que je te propose des liens directs vers les dépôts GitHub, des tutoriels ou une comparaison plus approfondie entre deux de ces outils ? N’hésite pas à demander !
+
+[1]: https://forum.level1techs.com/t/looking-for-new-open-source-software-for-video-editing/202561?utm_source=chatgpt.com "Looking for New Open Source Software for Video Editing"
+[2]: https://en.wikipedia.org/wiki/Kdenlive?utm_source=chatgpt.com "Kdenlive"
+[3]: https://alternativeto.net/software/davinci-resolve/?license=opensource&utm_source=chatgpt.com "Open Source DaVinci Resolve Alternatives: Top 10 Video ..."
+[4]: https://en.wikipedia.org/wiki/Shotcut?utm_source=chatgpt.com "Shotcut"
+[5]: https://opensourcealternative.to/alternativesto/davinci-resolve?utm_source=chatgpt.com "3 Open Source Alternatives to DaVinci Resolve"
+[6]: https://github.com/OpenShot?utm_source=chatgpt.com "OpenShot Studios, LLC"
+[7]: https://www.techradar.com/best/best-video-editing-apps?utm_source=chatgpt.com "Best video editing app of 2025: Recommended video editor apps for Android, iPhone, and iPad"
+[8]: https://github.com/olive-editor/olive?utm_source=chatgpt.com "olive-editor/olive: Free open-source non-linear video editor"
+[9]: https://gist.github.com/jcamp/24d9d4882d81a83db598dac281056960?utm_source=chatgpt.com "OpenSource Video Editors"
+[10]: https://www.reddit.com/r/opensource/comments/156ykpz/does_anybody_know_of_an_opensource_video_editor/?utm_source=chatgpt.com "Does anybody know of an open-source video Editor?"
+[11]: https://en.wikipedia.org/wiki/Natron_%28software%29?utm_source=chatgpt.com "Natron (software)"
+[12]: https://fr.wikipedia.org/wiki/Flowblade?utm_source=chatgpt.com "Flowblade"
+[13]: https://en.wikipedia.org/wiki/LosslessCut?utm_source=chatgpt.com "LosslessCut"
+
+
+------
+------
+
+Lesquels seraient plus compatibles pour une modification afin d'intégrer ce concept :
+
+```concept :
+Ton idée est très pertinente, tu touches là à ce qu’on appelle parfois le **montage vidéo automatique basé sur l’IA multimodale**. Je vais structurer une proposition de réflexion pour ton brainstorming, en décomposant les briques nécessaires et les cas d’usage :
+
+---
+
+## 1. Décomposition en séquences
+
+* **Découpage automatique** : les vidéos brutes sont segmentées en petites séquences (5–10 secondes ou adaptatif en fonction de l’action détectée : changement de plan, silence, mouvement, etc.).
+* **Métadonnées enrichies pour chaque séquence** :
+
+  * Horodatage d’origine (timeline).
+  * Source/angle (caméra 1, caméra 2, smartphone X).
+  * Audio : transcription (speech-to-text), intensité sonore, empreinte sonore (spectrogramme).
+  * Qualité vidéo : stabilité, flou, bruit, sur/sous-exposition, balance des couleurs.
+  * Détection de scène : mouvement, statique, zoom, panoramique.
+  * Détection des personnes/objets clés (reconnaissance faciale, corps, émotions, expressions, objets).
+
+---
+
+## 2. Indexation et synchronisation multimodale
+
+* **Matching cross-angles** : empreintes sonores ou timecodes pour aligner deux séquences filmées du même moment mais sous des angles différents.
+* **Alignement multi-sources** : même séquence rejouée à partir d’angles variés → permet à l’IA de choisir le meilleur plan selon critères (stabilité, visage bien cadré, diversité).
+
+---
+
+## 3. Critères de montage automatique
+
+* **Règles de base** :
+
+  * Pas de plans trop longs (5–10s max).
+  * Alterner plans larges, moyens, gros plans.
+  * Prioriser la qualité (éviter tremblements, flous, sur-expositions).
+* **Objectifs personnalisés** :
+
+  * Chaque acteur identifié doit apparaître X fois.
+  * Accentuer les moments forts (cris, applaudissements, musiques).
+  * Construire une narration (intro, climax, conclusion).
+* **Scénarisation automatique** : l’IA peut proposer plusieurs “versions” :
+
+  * **Résumé dynamique** (2–3 min best of).
+  * **Montage complet** (parcours chronologique).
+  * **Montage personnalisé** (centré sur une personne/acteur → reconnaissance faciale).
+
+---
+
+## 4. Personnalisation et livrables
+
+* **Montages multi-perspectives** :
+
+  * Version “générale” (vue d’ensemble de l’événement).
+  * Version “personnalisée” (par invité/acteur identifié).
+* **Exportation/Streaming** :
+
+  * Génération de vidéo finale (MP4, MKV, etc.).
+  * Export direct sur YouTube, Facebook, TikTok.
+  * Possibilité de **stream en live** (avec montage en temps réel, genre régie IA).
+
+---
+
+## 5. Stack technologique possible
+
+* **Découpage vidéo & audio** : `ffmpeg`, `pymediainfo`, `PyAV`.
+* **Analyse IA** :
+
+  * Vision : OpenAI Vision, PyTorch, OpenCV + modèles pré-entraînés (YOLOv8, Mediapipe).
+  * Audio : Whisper (transcription + diarisation), pyannote.audio (qui parle quand).
+  * Qualité : modèles spécialisés de détection de flou/bruit.
+* **Indexation & recherche multimodale** : FAISS, Weaviate, Milvus pour les embeddings multimodaux.
+* **Montage automatique** : réassemblage via `ffmpeg`, `moviepy`, ou pipeline sur GPU.
+* **Interface** :
+
+  * Web app (FastAPI/Next.js) pour uploader les vidéos, voir les suggestions de montage.
+  * Choix “version finale” ou “live stream” via OBS/FFmpeg + RTMP.
+
+---
+
+## 6. Cas d’usage concrets
+
+* Mariages/événements (version best-of, version par invité).
+* Concerts/spectacles (multi-cam angles synchronisés).
+* Sport amateur (montage par joueur).
+* Conférences/corporate (focus sur intervenants).
+
+```
+------
+------
+
+Super — on va le faire en 3 parties comme demandé : (1) dépôts GitHub exacts + point rapide sur leur doc, (2) une architecture détaillée pour réaliser ton “montage vidéo automatique multimodal”, (3) un projet de conception/réalisation (workpackages, livrables, critères de succès).
+
+# 1) Dépôts GitHub pertinents & lecture express de leur doc
+
+## “Moteurs” d’IA montage/ingest déjà proches de ton idée
+
+* **StoryToolkitAI** — *outil d’indexation+montage assisté par IA* (transcription, recherche sémantique, export EDL/XML, intégration Resolve). Doc/README indiquent : transcription locale (Whisper), détection locuteurs (pyannote), export EDL/XML, intégrations LLM (OpenAI/Ollama) et Resolve Studio 18+. Licence GPL-3.0. ([GitHub][1])
+* **Clip-Anything** — *prototype “clipping par prompt”* (analyse visuelle/audio/sentiment → coupe automatique). Très court, MIT, pas de releases ni d’archi lourde : plutôt une base d’expérimentation. ([GitHub][2])
+* **Pipecat** — *framework temps réel voix/multimodal* (pipelines audio/vidéo, WebRTC/WebSocket, STT/TTS/LLM pluggables). Idéal pour un mode “régie IA”/live. BSD-2-Clause, doc “quickstart” et SDKs web/iOS/Android/C++. ([GitHub][3])
+* **MMagic (OpenMMLab)** — *boîte à outils AIGC* (restauration vidéo, super-résolution, inpainting, diffusion, etc.) sous Apache-2.0. Utile pour post-améliorations qualité (débriutage, upscale) ou effets génératifs. ([GitHub][4], [mmagic.readthedocs.io][5])
+
+## Éditeurs/NLE open-source compatibles (cible d’export projet)
+
+* **Kdenlive** — dépôt miroir GitHub (dev principal sur KDE GitLab). Les fichiers *.kdenlive* sont du **XML basé sur MLT** (doc officielle). → excellent candidat pour **générer** un projet depuis ton moteur (EDL/XML/MLT). ([GitHub][6], [docs.kdenlive.org][7], [GitLab][8])
+* **Shotcut** — NLE basé sur **MLT**, dépôt GitHub actif ; note : Shotcut ajoute **des annotations propres** au MLT XML (doc dédiée). Bon candidat d’export MLT. ([GitHub][9], [shotcut.org][10])
+* **Natron** — compositing nodal (type Nuke/Fusion), utile pour une étape VFX/FX pipeline si besoin. ([GitHub][11])
+
+> Références MLT/format : MLT XML officiel + DTD (utile pour l’export automatique). ([mltframework.org][12], [sources.debian.org][13])
+
+## Briques IA/audio/vision prêtes à l’emploi (pour implémenter tes briques 1–3 du concept)
+
+* **Whisper** (ASR) + **whisper.cpp** (inférence CPU rapide). ([GitHub][14])
+* **pyannote.audio** (diarisation “qui parle quand”). ([GitHub][15])
+* **PySceneDetect** (détection de plans/coupures). ([GitHub][16], [scenedetect.com][17])
+* **OpenCLIP** (embeddings visuels/texte robustes pour indexation/recherche multimodale). ([GitHub][18])
+* **YOLOv8 (Ultralytics)** pour détection personnes/objets/action rapide. ([GitHub][19], [docs.ultralytics.com][20])
+* **FAISS** (index vectoriel local GPU/CPU) pour requêtes multimodales rapides. ([GitHub][21])
+* **Chromaprint/AcoustID** (empreintes audio) + **Dejavu** (matching audio) pour *alignment* multi-angles. ([GitHub][22])
+* **FFmpeg** / **PyAV** / **OpenCV** pour I/O, décodage/encodage, traitements image/vidéo. ([GitHub][23])
+* **Auto-Editor** (baseline coupes auto par silence/énergie) — utile comme *fallback* audio-centric. ([GitHub][24])
+
+# 2) Schéma d’architecture détaillé (proposé)
+
+```
+                ┌─────────────── Ingestion ────────────────┐
+Sources         │  - Probing + métadonnées (FFmpeg/PyAV)   │
+(cam1..N) ───►  │  - Audio WAV + frames basse résolution   │
+                └─────────────┬────────────────────────────┘
+                              │
+     ┌──────────── Vision IA ─┴─────────────┐   ┌──── Audio IA ────┐
+     │ - Détection scènes (PySceneDetect)   │   │ - STT (Whisper)  │
+     │ - YOLOv8: personnes/objets           │   │ - Diarisation    │
+     │ - Qualité: flou/expo/stabilité(*)    │   │   (pyannote)     │
+     │ - Embeddings (OpenCLIP)              │   │ - Empreintes     │
+     └───────────────┬──────────────────────┘   │   (Chromaprint)  │
+                     │                          └─────────┬────────┘
+                     │               Alignement multi-cam │
+                     └───────────────┬────────────────────┘
+                                     ▼
+                         ┌──── Indexation Multimodale ────┐
+                         │  - FAISS (CLIP+audio+texte)     │
+                         │  - Stockage méta JSON + blobs   │
+                         └──────────────┬──────────────────┘
+                                        │
+                       ┌──────── Sélection de plans ───────┐
+                       │  - Règles (durée, alternance,     │
+                       │    couverture visages, qualité)   │
+                       │  - Scoring pondéré & contraintes  │
+                       │  - Variantes: “best-of”, chrono,  │
+                       │    focale-personne                │
+                       └──────────────┬────────────────────┘
+                                      │
+                ┌────────── Génération timeline ────────────┐
+                │ - Export **MLT XML** (Kdenlive/Shotcut)   │
+                │ - Export EDL/XML/FCPXML (si nécessaire)   │
+                │ - Option export direct FFmpeg (render)    │
+                └──────────────┬────────────────────────────┘
+                               │
+           ┌────────── UI/Orchestration (FastAPI/Next.js) ──────────┐
+           │ - Chargement rushes, preview séquences, corrections IA │
+           │ - Choix “version finale” ou “live régie” (Pipecat WebRTC│
+           │   pour audio/vidéo interactifs)                         │
+           └─────────────────────────────────────────────────────────┘
+```
+
+(\*) Qualité image simple & rapide : variance du Laplacien (flou), histogrammes (sous/sur-expo), jitter (flux optique). Post-amélioration optionnelle via MMagic (débruitage, upscale). ([GitHub][4])
+
+**Pourquoi Kdenlive/Shotcut en cible ?** Parce que leurs projets sont des **XML MLT documentés**, donc générables automatiquement, et Shotcut documente même ses annotations spécifiques. Tu peux donc laisser l’humain reprendre la main si nécessaire dans un NLE standard. ([docs.kdenlive.org][7], [mltframework.org][12], [shotcut.org][10])
+
+# 3) Projet de conception & réalisation (plan concret)
+
+## Cibles & périmètre
+
+* **MVP “AutoEdit Engine”** (Python) qui ingère des rushes multi-cam, produit un **.kdenlive/.mlt** avec :
+
+  1. segmentation automatique, 2) transcription+diarisation, 3) alignement audio, 4) sélection automatique selon règles, 5) export projet, 6) rendu optionnel FFmpeg. ([docs.kdenlive.org][7], [mltframework.org][12])
+* **Mode “Live/Régie IA”** optionnel ensuite via **Pipecat** (stream + coupures intelligentes). ([GitHub][3])
+
+## Choix techniques
+
+* **I/O** : FFmpeg + PyAV (lecture/écriture), OpenCV (ops image). ([GitHub][23])
+* **Découpage/Scène** : PySceneDetect (seuil contenu et détection cut). ([GitHub][16])
+* **Audio** : Whisper (ASR), whisper.cpp pour CPU, pyannote (diarisation), Chromaprint/Dejavu (alignement). ([GitHub][14])
+* **Vision** : YOLOv8 (personnes/objets), OpenCLIP (embeddings visuel/texte). ([GitHub][19], [docs.ultralytics.com][20])
+* **Index** : FAISS local (GPU si dispo). ([GitHub][21])
+* **Export NLE** : génération **MLT XML** (Kdenlive/Shotcut) en respectant DTD+annotations Shotcut. ([mltframework.org][12], [shotcut.org][10])
+* **Post-améliorations** : MMagic pour restauration/super-résolution si demandé. ([GitHub][4])
+* **Baseline** : Auto-Editor comme référence audio-seule pour comparer. ([GitHub][24])
+
+## Workpackages (WPs) & livrables
+
+1. **WP-0 – Squelette & datasets**
+
+   * Repo mono (backend Python + CLI) + dossier *samples*.
+   * Scripts d’installation (conda/uv), vérif FFmpeg/PyAV. ([GitHub][23])
+
+2. **WP-1 – Ingestion & segmentation**
+
+   * Extraction méta (durée, fps), audio wav, downscale proxy.
+   * Détection de scènes (PySceneDetect) + JSON “séquence” (timestamps, source). ([GitHub][16])
+   * **Livrable** : CLI `autoedit ingest *.mp4` → `sequences.json`.
+
+3. **WP-2 – Analyse audio/texte**
+
+   * STT Whisper + diarisation pyannote (segments par locuteur).
+   * Empreintes audio (Chromaprint) pour matching multi-cam.
+   * **Livrable** : `transcript.json` (mots + speakers) + `audio_fprints.json`. ([GitHub][14])
+
+4. **WP-3 – Analyse vision & qualité**
+
+   * YOLOv8 (personnes/objets), heuristiques qualité (flou/expo), embeddings OpenCLIP.
+   * **Livrable** : `vision.json` (bbox, tags, scores, embeddings). ([GitHub][19])
+
+5. **WP-4 – Index multimodal & requêtes**
+
+   * FAISS : indexer (texte CLIP, audio, méta). Requêtes type “clippe X quand Y parle et applaudissements”.
+   * **Livrable** : `index.faiss` + API de requêtes. ([GitHub][21])
+
+6. **WP-5 – Sélection & solver de montage**
+
+   * Règles : durée 5–10s, alternance plan large/moyen/serré, visibilité des acteurs, priorité qualité.
+   * Scoring pondéré + contraintes *no-jump-cut* (éviter coupes trop proches et associations incohérentes).
+   * **Livrable** : `edit_decisions.json` (liste plans retenus + transitions).
+
+7. **WP-6 – Génération projet NLE**
+
+   * Écriture **MLT XML** (pistes, clips, transitions, sous-titres depuis STT).
+   * Cibles : **Kdenlive** (*.kdenlive* XML/MLT) et **Shotcut** (MLT XML + annotations requises).
+   * **Livrable** : `project.kdenlive` et/ou `project.mlt` directement ouvrables. ([docs.kdenlive.org][7], [shotcut.org][10])
+
+8. **WP-7 – UI & mode Live**
+
+   * Petit dashboard (FastAPI/Next.js) pour visualiser séquences, ajuster règles, relancer l’algorithme.
+   * Mode live : intégration **Pipecat** pour recevoir flux (WebRTC), déclencher coupes automatiques selon les mêmes critères. ([GitHub][3])
+
+9. **WP-8 – Améliorations qualité (option)**
+
+   * Intégrer **MMagic** (débruitage, super-rés, inpainting) en tâche post-proc paramétrable. ([GitHub][4])
+
+## Critères de succès (métriques)
+
+* **Ouverture directe** des projets dans Kdenlive/Shotcut sans erreur (logs MLT propres). ([mltframework.org][12])
+* **Temps gagné** vs montage manuel (nbre de coupes auto pertinentes ≥ X% selon revue humaine).
+* **Qualité montage** : pas de plans >10s par défaut, alternance correcte d’échelles, couverture ≥ N apparitions par acteur identifié (paramétrable).
+* **Robustesse** : capacité à traiter N caméras, 60+ min de rushes, sans crash, avec re-prise sur erreur.
+
+## Risques & parades
+
+* **Variabilité MLT (Shotcut annotations)** → viser d’abord Kdenlive (MLT “vanilla”), ajouter un *writer* spécifique Shotcut ensuite. ([shotcut.org][10])
+* **STT/diarisation bruitées** → seuils VAD + re-scoring par contexte (faible confiance → couper sur indices visuels/sonores).
+* **Perfs** → pipeline *proxies* + batch GPU (YOLO/CLIP), fallback CPU (whisper.cpp). ([GitHub][25])
+* **Droits/licences** → respecter GPL-3 de StoryToolkitAI si code réutilisé tel quel ; sinon implémenter indépendamment et ne pas lier code GPL au cœur si licence permissive visée. ([GitHub][1])
+
+---
+
+## Recommandation 🤝 (compatibilité vs ton concept)
+
+* **Cible export principale** : **Kdenlive** → format XML/MLT documenté et robuste à la génération automatique. **Shotcut** en second (prendre en compte ses annotations). ([docs.kdenlive.org][7], [mltframework.org][12], [shotcut.org][10])
+* **Base IA** : partir *from scratch* avec **PySceneDetect + Whisper/pyannote + YOLOv8 + OpenCLIP + FAISS** pour maîtriser pipeline & licence, tout en **s’inspirant** de **StoryToolkitAI** pour l’UX et l’export EDL/XML. ([GitHub][16])
+* **Live** : **Pipecat** si tu veux le mode “régie IA” (faible friction pour WebRTC/STT/TTS/LLM). ([GitHub][3])
+* **Post-amélioration vidéo** (option) : **MMagic** (débruitage/upscale). ([GitHub][4])
+
+Si tu veux, je peux te générer un **squelette de repo** (arborescence, fichiers JSON de schéma pour `sequence/vision/transcript/edit_decisions`, plus un **exemple minimal** d’export **MLT XML** produisant un projet Kdenlive avec 3 coupes et sous-titres — dis-moi et je te le dépose ici.
+
+[1]: https://github.com/octimot/StoryToolkitAI "GitHub - octimot/StoryToolkitAI: An editing tool that uses AI to transcribe, understand content and search for anything in your footage,  integrated with ChatGPT and other AI models"
+[2]: https://github.com/SamurAIGPT/Clip-Anything "GitHub - SamurAIGPT/Clip-Anything: Clip any moment from any video with prompts"
+[3]: https://github.com/pipecat-ai/pipecat "GitHub - pipecat-ai/pipecat: Open Source framework for voice and multimodal conversational AI"
+[4]: https://github.com/open-mmlab/mmagic "GitHub - open-mmlab/mmagic: OpenMMLab Multimodal Advanced, Generative, and Intelligent Creation Toolbox. Unlock the magic : Generative-AI (AIGC), easy-to-use APIs, awsome model zoo, diffusion models, for text-to-image generation, image/video restoration/enhancement, etc."
+[5]: https://mmagic.readthedocs.io/?utm_source=chatgpt.com "Welcome to MMagic's documentation! — MMagic documentation"
+[6]: https://github.com/KDE/kdenlive?utm_source=chatgpt.com "KDE/kdenlive: Free and open source video editor ..."
+[7]: https://docs.kdenlive.org/en/project_and_asset_management/file_management/project_files.html?utm_source=chatgpt.com "Project File Details — Kdenlive Manual 25.04 documentation"
+[8]: https://invent.kde.org/multimedia/kdenlive?utm_source=chatgpt.com "Multimedia / Kdenlive · GitLab"
+[9]: https://github.com/mltframework/shotcut?utm_source=chatgpt.com "mltframework/shotcut: cross-platform (Qt), open-source ..."
+[10]: https://www.shotcut.org/notes/mltxml-annotations/?utm_source=chatgpt.com "MLT XML Annotations"
+[11]: https://github.com/NatronGitHub/Natron?utm_source=chatgpt.com "NatronGitHub/Natron: Open-source video ..."
+[12]: https://www.mltframework.org/docs/mltxml/?utm_source=chatgpt.com "MLT XML"
+[13]: https://sources.debian.org/src/mlt/6.24.0-1/docs/mlt-xml.txt/?utm_source=chatgpt.com "File: mlt-xml.txt"
+[14]: https://github.com/openai/whisper?utm_source=chatgpt.com "openai/whisper: Robust Speech Recognition via Large- ..."
+[15]: https://github.com/pyannote/pyannote-audio?utm_source=chatgpt.com "pyannote/pyannote-audio: Neural building blocks for ..."
+[16]: https://github.com/Breakthrough/PySceneDetect?utm_source=chatgpt.com "Breakthrough/PySceneDetect: :movie_camera: Python and ... - GitHub"
+[17]: https://www.scenedetect.com/docs/latest/?utm_source=chatgpt.com "PySceneDetect 0.6.6 documentation"
+[18]: https://github.com/mlfoundations/open_clip "GitHub - mlfoundations/open_clip: An open source implementation of CLIP."
+[19]: https://github.com/ultralytics/ultralytics?utm_source=chatgpt.com "Ultralytics YOLO"
+[20]: https://docs.ultralytics.com/models/yolov8/?utm_source=chatgpt.com "Explore Ultralytics YOLOv8"
+[21]: https://github.com/facebookresearch/faiss?utm_source=chatgpt.com "facebookresearch/faiss: A library for efficient similarity ..."
+[22]: https://github.com/acoustid/chromaprint?utm_source=chatgpt.com "acoustid/chromaprint: C library for generating audio ..."
+[23]: https://github.com/FFmpeg/FFmpeg?utm_source=chatgpt.com "GitHub - FFmpeg/FFmpeg: Mirror of https://git. ..."
+[24]: https://github.com/WyattBlue/auto-editor?utm_source=chatgpt.com "Auto-Editor: Efficient media analysis and rendering"
+[25]: https://github.com/ggml-org/whisper.cpp?utm_source=chatgpt.com "ggml-org/whisper.cpp"
+

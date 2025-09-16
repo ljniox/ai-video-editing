@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autoedit"
+version = "0.1.0"
+description = "Local-first auto-edit MVP: ingest, scene detect, transcribe, select, export MLT"
+authors = [{name = "AutoEdit Team"}]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "typer[all]~=0.12",
+  "pydantic~=2.7",
+  "requests~=2.32",
+  "rich~=13.7",
+  "lxml~=5.2",
+]
+
+[project.optional-dependencies]
+full = [
+  "opencv-python~=4.10",
+  "scenedetect[opencv]~=0.6",
+  "faster-whisper~=1.0",
+  "numpy~=2.1",
+  "soundfile~=0.12",
+  "librosa~=0.10",
+  "pydub~=0.25",
+  "PyYAML~=6.0",
+]
+
+[project.scripts]
+autoedit = "autoedit.cli.main:app"
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W"]
+ignore = []

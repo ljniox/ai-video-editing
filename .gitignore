@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+# Project outputs
+runs/
+dist/
+build/
+*.egg-info/
+outputs/
+artifacts/
+logs/
