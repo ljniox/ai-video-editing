@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
 from typing import List, Optional
 
 import typer
@@ -16,6 +17,10 @@ from autoedit.schemas.sequences import Sequences
 from autoedit.schemas.selection import Selection
 from autoedit.schemas.transcript import Transcript
 from autoedit.backends.local.transcriber import LocalTranscriber
+from autoedit.backends.lightning.transcriber import (
+    LightningConfig,
+    LightningTranscriber,
+)
 
 
 install(show_locals=False)
@@ -54,11 +59,19 @@ def cut(
 
 @app.command()
 def stt(
-    audio: Path = typer.Argument(..., exists=True, dir_okay=False),
+    audio: Path = typer.Argument(None, exists=True, dir_okay=False),
     backend: str = typer.Option("local", help="Transcription backend: local|lightning"),
     language: Optional[str] = typer.Option(None, help="Language code, e.g., en, fr"),
     model: str = typer.Option("medium", help="Whisper model size (local)"),
     output: Path = typer.Option(..., "-o", "--output", help="Output transcript.json path"),
+    audio_url: Optional[str] = typer.Option(
+        None,
+        help="When using backend=lightning, provide a presigned URL to audio",
+    ),
+    endpoint: Optional[str] = typer.Option(
+        None,
+        help="Lightning service base URL; defaults to $LIGHTNING_BASE_URL",
+    ),
 ):
     """Transcribe audio to transcript.json using the selected backend."""
     console.rule("Transcription")
@@ -66,7 +79,17 @@ def stt(
         transcriber = LocalTranscriber(model=model)
         transcript: Transcript = transcriber.transcribe(audio, language=language)
     else:
-        raise typer.BadParameter("Only 'local' backend implemented in CLI for now.")
+        base_url = endpoint or os.getenv("LIGHTNING_BASE_URL")
+        if not base_url:
+            raise typer.BadParameter(
+                "Provide --endpoint or set LIGHTNING_BASE_URL for lightning backend."
+            )
+        if not audio_url:
+            raise typer.BadParameter("Provide --audio-url for lightning backend (presigned).")
+        transcriber = LightningTranscriber(
+            LightningConfig(base_url=base_url, api_key=os.getenv("LIGHTNING_API_KEY"))
+        )
+        transcript = transcriber.transcribe_url(audio_url, lang=language, model=model)
     _ensure_parent(output)
     output.write_text(transcript.model_dump_json(indent=2))
     print(f"Wrote {output}")
@@ -76,10 +99,15 @@ def stt(
 def select(
     artifacts_dir: Path = typer.Argument(..., exists=True, file_okay=False),
     output: Path = typer.Option(..., "-o", "--output", help="Output selection.json path"),
+    speech_only: bool = typer.Option(False, help="Keep only segments with detected speech"),
+    min_len: float = typer.Option(0.0, help="Drop shots shorter than this (seconds)"),
+    max_len: float = typer.Option(0.0, help="Trim shots longer than this (seconds)"),
 ):
     """Apply simple selection rules and write selection.json."""
     console.rule("Selection")
-    selection = select_segments(artifacts_dir)
+    selection = select_segments(
+        artifacts_dir, speech_only=speech_only, min_len=min_len, max_len=max_len
+    )
     _ensure_parent(output)
     output.write_text(selection.model_dump_json(indent=2))
     print(f"Wrote {output}")

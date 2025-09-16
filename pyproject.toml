@@ -32,6 +32,12 @@ full = [
 [project.scripts]
 autoedit = "autoedit.cli.main:app"
 
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.packages.find]
+include = ["autoedit*"]
+
 [tool.black]
 line-length = 100
 

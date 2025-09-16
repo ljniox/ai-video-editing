@@ -5,6 +5,10 @@ from pathlib import Path
 from autoedit.schemas.selection import Selection
 
 
+def _producer_id(index: int) -> str:
+    return f"producer{index}"
+
+
 def _sec_to_frames(sec: float, fps: float) -> int:
     return max(int(round(sec * fps)), 0)
 
@@ -19,7 +23,7 @@ def export_mlt(selection: Selection, output_path: Path, fps: float = 25.0) -> No
         return
 
     sources = list({s.source for s in selection.shots})
-    source = sources[0]
+    source_to_id = {src: _producer_id(i) for i, src in enumerate(sources)}
 
     # Warn if multiple sources; only the first is used in this minimal exporter.
     # A richer exporter could add multiple producers & playlists.
@@ -30,8 +34,22 @@ def export_mlt(selection: Selection, output_path: Path, fps: float = 25.0) -> No
         end_f = _sec_to_frames(s.end, fps)
         if end_f <= start_f:
             continue
+        pid = source_to_id.get(s.source, _producer_id(0))
         entries.append(
-            f'  <entry producer="producer0" in="{start_f}" out="{max(end_f - 1, start_f)}" />'
+            f'  <entry producer="{pid}" in="{start_f}" out="{max(end_f - 1, start_f)}" />'
+        )
+
+    producers_xml = []
+    for src, pid in source_to_id.items():
+        producers_xml.append(
+            "\n".join(
+                [
+                    f' <producer id="{pid}">',
+                    f'  <property name="resource">{src}</property>',
+                    '  <property name="mlt_service">avformat</property>',
+                    " </producer>",
+                ]
+            )
         )
 
     xml = f"""
@@ -43,10 +61,7 @@ def export_mlt(selection: Selection, output_path: Path, fps: float = 25.0) -> No
   width="1920"
   height="1080"
   colorspace="709"/>
- <producer id="producer0">
-  <property name="resource">{source}</property>
-  <property name="mlt_service">avformat</property>
- </producer>
+{chr(10).join(producers_xml)}
  <playlist id="playlist0">
 {chr(10).join(entries)}
  </playlist>
