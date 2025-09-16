@@ -19,7 +19,7 @@ class LocalTranscriber(Transcriber):
     def transcribe(self, audio_path: Path, language: Optional[str] = None) -> Transcript:
         try:
             from faster_whisper import WhisperModel  # type: ignore
-        except Exception as e:  # pragma: no cover - fallback path
+        except Exception:  # pragma: no cover - fallback path
             # Graceful fallback: return empty transcript with a hint
             hint = (
                 "faster-whisper not installed. Install with 'pip install faster-whisper' "
@@ -35,4 +35,3 @@ class LocalTranscriber(Transcriber):
         ]
         full_text = " ".join(s.text for s in segments).strip()
         return Transcript(text=full_text, segments=segments)
-

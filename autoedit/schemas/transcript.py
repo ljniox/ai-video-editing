@@ -15,4 +15,3 @@ class Transcript(BaseModel):
     text: str
     segments: List[TranscriptSegment]
     note: Optional[str] = None
-

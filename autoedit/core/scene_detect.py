@@ -65,4 +65,3 @@ def detect_scenes(raw_dir: Path) -> List[Segment]:
         dur = _ffprobe_duration(source) or 0.0
         segments.append(Segment(start=0.0, end=max(dur, 0.0), source=str(source)))
     return segments
-

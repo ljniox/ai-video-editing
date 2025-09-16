@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List
 
 from autoedit.schemas.selection import Selection
 
@@ -32,12 +31,18 @@ def export_mlt(selection: Selection, output_path: Path, fps: float = 25.0) -> No
         if end_f <= start_f:
             continue
         entries.append(
-            f"  <entry producer=\"producer0\" in=\"{start_f}\" out=\"{max(end_f - 1, start_f)}\" />"
+            f'  <entry producer="producer0" in="{start_f}" out="{max(end_f - 1, start_f)}" />'
         )
 
     xml = f"""
 <mlt title="autoedit" version="7.8.0">
- <profile description="HD 1080p {fps} fps" frame_rate_num="{int(fps)}" frame_rate_den="1" width="1920" height="1080" colorspace="709"/>
+ <profile
+  description="HD 1080p {fps} fps"
+  frame_rate_num="{int(fps)}"
+  frame_rate_den="1"
+  width="1920"
+  height="1080"
+  colorspace="709"/>
  <producer id="producer0">
   <property name="resource">{source}</property>
   <property name="mlt_service">avformat</property>

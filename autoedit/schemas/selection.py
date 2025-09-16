@@ -9,4 +9,3 @@ from .sequences import Segment
 
 class Selection(BaseModel):
     shots: List[Segment]
-

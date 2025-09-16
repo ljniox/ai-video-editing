@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 from autoedit.schemas.selection import Selection
@@ -17,4 +16,3 @@ def select_segments(artifacts_dir: Path) -> Selection:
         return Selection(shots=[])
     sequences = Sequences.model_validate_json(seq_path.read_text())
     return Selection(shots=[Segment(**s.model_dump()) for s in sequences.segments])
-

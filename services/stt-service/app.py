@@ -38,4 +38,3 @@ def transcribe(req: TranscribeRequest, x_api_key: Optional[str] = Header(None)):
     _check_api_key(x_api_key)
     # MVP stub: echo request; in a real service, stream audio_url and run GPU whisper
     return TranscribeResponse(text="", segments=[], hash=None)
-

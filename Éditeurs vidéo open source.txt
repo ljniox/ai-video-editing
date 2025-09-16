@@ -397,4 +397,3 @@ Si tu veux, je peux te générer un **squelette de repo** (arborescence, fichier
 [23]: https://github.com/FFmpeg/FFmpeg?utm_source=chatgpt.com "GitHub - FFmpeg/FFmpeg: Mirror of https://git. ..."
 [24]: https://github.com/WyattBlue/auto-editor?utm_source=chatgpt.com "Auto-Editor: Efficient media analysis and rendering"
 [25]: https://github.com/ggml-org/whisper.cpp?utm_source=chatgpt.com "ggml-org/whisper.cpp"
-

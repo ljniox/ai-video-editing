@@ -13,4 +13,3 @@ class Segment(BaseModel):
 
 class Sequences(BaseModel):
     segments: List[Segment]
-

@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List
 
@@ -23,6 +22,7 @@ def _run(cmd: List[str]) -> int:
 def _ffprobe_duration(path: Path) -> float | None:
     try:
         import json as _json
+
         result = subprocess.run(
             [
                 "ffprobe",
@@ -105,4 +105,3 @@ def ingest_media(inputs: List[Path], run_dir: Path) -> Dict[str, str]:
     (artifacts_dir / "media.db.json").write_text(json.dumps(media_db, indent=2))
 
     return created
-

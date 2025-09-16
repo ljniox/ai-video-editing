@@ -25,7 +25,9 @@ class LightningTranscriber:
     def __init__(self, config: LightningConfig) -> None:
         self.config = config
 
-    def transcribe_url(self, audio_url: str, lang: Optional[str] = None, model: str = "medium") -> Transcript:
+    def transcribe_url(
+        self, audio_url: str, lang: Optional[str] = None, model: str = "medium"
+    ) -> Transcript:
         headers = {}
         api_key = self.config.api_key or os.getenv("LIGHTNING_API_KEY")
         if api_key:
@@ -40,8 +42,9 @@ class LightningTranscriber:
         resp.raise_for_status()
         data = resp.json()
         segments = [
-            TranscriptSegment(start=s.get("start", 0.0), end=s.get("end", 0.0), text=s.get("text", ""))
+            TranscriptSegment(
+                start=s.get("start", 0.0), end=s.get("end", 0.0), text=s.get("text", "")
+            )
             for s in data.get("segments", [])
         ]
         return Transcript(text=data.get("text", ""), segments=segments)
-
