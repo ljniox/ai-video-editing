@@ -10,7 +10,7 @@ These guidelines define how we write, format, test, and review code for the Auto
 - Keep modules within the existing layout:
   - `autoedit/cli`: CLI entry points (Typer)
   - `autoedit/core`: core pipeline logic (ingest, scene-detect, selection)
-  - `autoedit/backends`: interface + implementations (local, lightning)
+  - `autoedit/backends`: interface + implementations (local, lightning/beam)
   - `autoedit/exporters`: timeline/export code (MLT, etc.)
   - `autoedit/schemas`: Pydantic models for artifacts
   - `services/*`: deployable FastAPI services (GPU offload)

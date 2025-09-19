@@ -1,11 +1,11 @@
 # MVP Global Development & Infrastructure Plan
 
-This document defines the development workflow, environment setup, architecture, cloud offload (Lightning AI), CI/CD, and ops practices for the AutoEdit MVP.
+This document defines the development workflow, environment setup, architecture, cloud offload (Beam Cloud), CI/CD, and ops practices for the AutoEdit MVP.
 
 ## 0) Goals & Deliverables
 
 - Produce a local-first MVP that ingests media, detects scenes, transcribes speech, applies simple selection rules, and exports an editable timeline (`.mlt` for Kdenlive/Shotcut). Optional direct FFmpeg render.
-- Provide pluggable backends for heavy inference (local CPU vs. Lightning AI GPU) without changing core logic.
+- Provide pluggable backends for heavy inference (local CPU vs. Beam Cloud GPU) without changing core logic.
 - Ship a small CLI for reproducible runs and a predictable project folder layout for artifacts.
 - Establish a minimal, practical CI/testing loop and a cloud deployment path for GPU services.
 
@@ -16,14 +16,14 @@ This document defines the development workflow, environment setup, architecture,
 - Local Orchestrator (Mac Intel)
   - CLI driving ingest, scene detection, transcription (local or remote), selection, export.
   - CPU-first implementations for everything; no local GPU required.
-- Remote GPU Offload (Lightning AI)
+- Remote GPU Offload (Beam Cloud)
   - One or more FastAPI-based microservices: `stt-service` (Whisper GPU), optional `diarization-service` (pyannote), optional `vision-service` (YOLO/CLIP embeddings).
   - Stateless endpoints; artifacts exchanged via signed URLs to object storage; results returned as JSON.
 - Storage
   - Local: per-project working directory with JSON artifacts and proxies.
-  - Cloud: S3-compatible object storage (or Lightning-provided storage) for audio chunks, proxy frames, and cached model outputs.
+  - Cloud: S3-compatible object storage (or Beam-provided storage) for audio chunks, proxy frames, and cached model outputs.
 - Interfaces & Adapters
-  - Abstract interfaces: `Transcriber`, `Diarizer`, `Detector`, `Embedder` with Local and Lightning implementations.
+  - Abstract interfaces: `Transcriber`, `Diarizer`, `Detector`, `Embedder` with Local and Beam implementations.
   - Configurable via YAML/env to switch backends at runtime with timeouts and fallback.
 
 ---
@@ -36,13 +36,13 @@ This document defines the development workflow, environment setup, architecture,
 │  ├─ cli/                     # CLI entrypoints (Typer/Click)
 │  ├─ backends/
 │  │  ├─ local/                # Local CPU implementations
-│  │  └─ lightning/            # Remote clients (HTTP) for GPU services
+│  │  └─ lightning/            # Remote Beam clients (HTTP) for GPU services (rename pending)
 │  ├─ core/                    # ingest, scene detect, rules, timeline export
 │  ├─ schemas/                 # Pydantic/JSON schemas
 │  ├─ exporters/               # MLT XML, Kdenlive project, EDL/FCPXML (optional)
 │  └─ __init__.py
 ├─ services/
-│  └─ stt-service/             # FastAPI for Whisper GPU (Lightning deploy)
+│  └─ stt-service/             # FastAPI for Whisper GPU (Beam deploy)
 │     ├─ app.py                # /health, /transcribe endpoints
 │     ├─ requirements.txt      # faster-whisper, uvicorn, fastapi, etc.
 │     └─ Dockerfile.gpu        # nvidia/cuda base, Python deps
@@ -80,22 +80,24 @@ This document defines the development workflow, environment setup, architecture,
 ## 4) Configuration & Secrets
 
 - Config File (`config.yaml`)
-  - `stt_backend: local|lightning`
-  - `diarization_backend: none|local|lightning`
-  - `vision_backend: none|local|lightning`
+  - `stt_backend: local|lightning` (remote Beam backend while naming migrates)
+  - `diarization_backend: none|local|lightning` (remote Beam backend)
+  - `vision_backend: none|local|lightning` (remote Beam backend)
   - `lightning:
-      base_url: https://<your-lightning-endpoint>
-      api_key: ${LIGHTNING_API_KEY}
+      base_url: https://<your-beam-endpoint>
+      api_key: ${LIGHTNING_API_KEY}  # use Beam key; env name kept for compatibility
       timeout_s: 60`
+  - `beam_api_tokens`: optional list of Beam accounts with `env` keys (see `docs/beam/accounts.md`).
   - `storage:
       provider: s3|gcs|local
       bucket: <bucket-name>
       base_url: https://... (presigned)`
 - Env Vars
-  - `LIGHTNING_API_KEY`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION`, `S3_ENDPOINT` (if using MinIO or other S3-compatible).
+  - `LIGHTNING_API_KEY` (Beam API key), `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION`, `S3_ENDPOINT` (if using MinIO or other S3-compatible).
+  - Any env var matching `BEAM_API_TOKEN_*` is auto-discovered for round-robin GPU usage.
 - Secrets Management
   - Local: `.env` (never commit), use `direnv` or `dotenv`.
-  - CI: GitHub Actions secrets; deploy-time injection for Lightning services.
+  - CI: GitHub Actions secrets; deploy-time injection for Beam services.
 
 ---
 
@@ -123,10 +125,10 @@ This document defines the development workflow, environment setup, architecture,
 - Scene Detection
   - Use PySceneDetect (content-aware threshold) to create `sequences.json`.
   - CLI: `autoedit cut runs/<id>/raw -o runs/<id>/artifacts/sequences.json`
-- Transcription (Local or Lightning)
+- Transcription (Local or Beam)
   - Local: `faster-whisper` small/medium model.
   - Remote: chunk audio (5–10 min windows), upload, call `/transcribe`, merge.
-  - CLI: `autoedit stt runs/<id>/audio/main.flac --backend lightning`
+  - CLI: `autoedit stt runs/<id>/audio/main.flac --backend lightning` (Beam backend until CLI rename)
 - Selection (Rules Engine)
   - Heuristics: speech-gated shots, min/max shot length, optional face presence.
   - CLI: `autoedit select runs/<id>/artifacts -o selection.json`
@@ -138,15 +140,16 @@ This document defines the development workflow, environment setup, architecture,
 
 ---
 
-## 7) Lightning AI GPU Services
+## 7) Beam Cloud GPU Services
 
 - Approach
   - Build containerized FastAPI services that accept signed URLs to input artifacts and return JSON.
-  - Deploy to Lightning AI with GPU instances sized per model.
+  - Deploy to Beam Cloud with GPU instances sized per model.
 - `stt-service` (Whisper GPU)
   - Endpoint `POST /transcribe` with `{ audio_url, lang?, model? }`.
   - Returns `{ segments: [{ start, end, text }], text }` compatible with local schema.
   - Implementation: `faster-whisper` on GPU (CTranslate2 CUDA build) or `whisper` + PyTorch CUDA.
+- Multi-account strategy: rotate requests across `BEAM_API_TOKEN_*` credentials to fan out across multiple Beam organizations (supports parallel jobs and simple failover).
 - Optional `diarization-service`
   - Endpoint `POST /diarize` → speaker-labeled segments.
   - Implementation: `pyannote.audio` GPU build; configurable max duration.
@@ -166,9 +169,10 @@ This document defines the development workflow, environment setup, architecture,
   - Base image: `nvidia/cuda:12.x-cudnn-runtime-ubuntu22.04` (for GPU services).
   - Install: `python3`, `pip`, dependencies (`faster-whisper`, `fastapi`, `uvicorn[standard]`).
   - Expose port `8080`; health endpoint `/healthz`.
-- Lightning AI
-  - Define app/work config referencing the GPU container and environment.
-  - Provide `LIGHTNING_API_KEY` via platform secrets; set min/max replicas to control cost.
+- Beam Cloud
+  - Define Beam app/work config referencing the GPU container and environment.
+  - Provide `LIGHTNING_API_KEY` (Beam API key) via platform secrets; set min/max replicas to control cost.
+  - Inject additional `BEAM_API_TOKEN_*` secrets when parallel capacity or multi-account routing is required.
 - Storage
   - S3/MinIO/GCS for artifacts with presigned URLs; lifecycle rules for auto-expiration.
 - Observability
@@ -185,7 +189,7 @@ This document defines the development workflow, environment setup, architecture,
   - `services-build.yml`: build & push Docker images for GPU services on tags; scan with Trivy.
   - `release.yml`: create GitHub Release with pinned wheel versions and changelog.
 - Secrets
-  - `REGISTRY_USER`, `REGISTRY_TOKEN`, `LIGHTNING_API_KEY` (if needed for deploy hooks).
+  - `REGISTRY_USER`, `REGISTRY_TOKEN`, `LIGHTNING_API_KEY` (Beam deploy key) if needed for deploy hooks.
 - Artifacts
   - Upload test coverage and small sample outputs for reproducibility.
 
@@ -195,7 +199,7 @@ This document defines the development workflow, environment setup, architecture,
 
 - Unit Tests
   - Core modules: ingest, scene detection wrappers, selection rules, MLT exporter.
-  - Backends: local and lightning clients (mock HTTP).
+  - Backends: local and Beam clients (mock HTTP).
 - Integration Tests
   - End-to-end on sample media (<= 10s) to verify artifacts chain and MLT round-trip.
 - Contract Tests
@@ -224,8 +228,8 @@ This document defines the development workflow, environment setup, architecture,
   - Repo setup, CLI skeleton, FFmpeg/PySceneDetect wrappers, `sequences.json`.
 - Week 2: STT (Local) + Export MLT
   - `faster-whisper` integration, transcript merge, baseline selection, `.mlt` export.
-- Week 3: Lightning STT Service + Adapters
-  - Containerize `stt-service`, deploy to Lightning, add client + fallback.
+- Week 3: Beam STT Service + Adapters
+  - Containerize `stt-service`, deploy to Beam, add client + fallback.
 - Week 4 (optional): Diarization / Multicam Alignment / Quality Heuristics
   - `pyannote` service, Chromaprint alignment, face/quality heuristics.
 
@@ -277,5 +281,5 @@ autoedit export-mlt runs/demo/artifacts/selection.json -o runs/demo/outputs/edit
 ## 16) Definition of Done (MVP)
 
 - CLI runs end-to-end locally on a sample: produces `sequences.json`, `transcript.json`, `selection.json`, and a working `.mlt` project importable into Kdenlive/Shotcut.
-- Lightning STT service reachable with authenticated request; client adapter can switch between local and lightning.
+- Beam STT service reachable with authenticated request; client adapter can switch between local and Beam (legacy `lightning` flag).
 - Tests pass on CI; README documents setup and example run.
