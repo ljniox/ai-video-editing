@@ -1,13 +1,22 @@
 # AutoEdit configuration (example)
 
-stt_backend: local  # local|lightning
-diarization_backend: none  # none|local|lightning
-vision_backend: none  # none|local|lightning
+stt_backend: local  # local|lightning (remote Beam backend)
+diarization_backend: none  # none|local|lightning (remote Beam backend)
+vision_backend: none  # none|local|lightning (remote Beam backend)
 
 lightning:
-  base_url: https://your-lightning-endpoint
-  api_key: ${LIGHTNING_API_KEY}
+  base_url: https://your-beam-endpoint
+  api_key: ${LIGHTNING_API_KEY}  # legacy name; Beam key supported here
   timeout_s: 60
+
+# Optional: declare additional Beam accounts for load distribution (set env vars, do not commit secrets)
+beam_api_tokens:
+  - name: beam-ljniox
+    env: BEAM_API_TOKEN_LJNIOX
+  - name: beam-sdbdkr
+    env: BEAM_API_TOKEN_SDBDKR
+  - name: beam-jniox
+    env: BEAM_API_TOKEN_JNIOX
 
 storage:
   provider: local  # local|s3|gcs

@@ -1,4 +1,4 @@
-# Minimal GPU Dockerfile stub for Lightning AI deployment
+# Minimal GPU Dockerfile stub for Beam Cloud deployment
 FROM nvidia/cuda:12.2.0-cudnn-runtime-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive

@@ -1,0 +1,54 @@
+# Beam GPU Acceleration Cheat Sheet
+
+Source: https://docs.beam.cloud/v2/environment/gpu (retrieved 2025-09-19; check upstream for updates)
+
+## Run An Endpoint On A GPU
+- Decorate your handler with `@endpoint(gpu="<type>")`.
+- Example:
+  ```python
+  from beam import endpoint
+
+  @endpoint(gpu="A100-40")
+  def handler():
+      # Example: inspect GPU availability inside the container
+      import subprocess
+      print(subprocess.check_output(["nvidia-smi"], shell=True))
+
+      return {"gpu": "true"}
+  ```
+- Supported keywords: `gpu` (string or list), optional `gpu_count` (by request).
+
+## Currently Published GPU SKUs
+- `T4` (16 GiB)
+- `A10G` (24 GiB)
+- `RTX4090` (24 GiB)
+- `A100-40` (40 GiB)
+- `H100` (80 GiB)
+- Need something else? Ping the Beam team via Slack: https://join.slack.com/t/beam-cloud/shared_invite/zt-39hbkt8ty-CTVv4NsgLoYArjWaVkwcFw
+
+## Check GPU Availability From The CLI
+```bash
+beam machine list
+
+  GPU Type   Available
+ ──────────────────────
+  A100-40       ✅
+  A10G          ✅
+  RTX4090       ✅
+```
+
+## Prioritise Multiple GPU Types
+- Pass an ordered list to the decorator: `@endpoint(gpu=["T4", "A10G", "A100-40"])`.
+- Beam tries the first available GPU in the list.
+
+## Request Multiple GPUs For One Task
+- Use the `gpu_count` keyword: `@endpoint(gpu="A10G", gpu_count=2)`.
+- Feature is opt-in—ask Beam support to enable it on your account.
+
+## Regions
+- Beam runs workloads in the US, Europe, and Asia. Reach out via Slack to pin a specific region.
+
+## Next Steps
+- Full getting started guide: `docs/beam/getting-started.md` (local extract).
+- Official docs: https://docs.beam.cloud/
+- Manage multiple Beam accounts: `docs/beam/accounts.md`.

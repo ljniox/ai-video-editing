@@ -1,6 +1,6 @@
 # AutoEdit MVP
 
-Local-first auto-edit pipeline that ingests media, detects scenes, transcribes speech, applies simple selection rules, and exports an MLT timeline for Kdenlive/Shotcut. Optional GPU offload via Lightning AI services.
+Local-first auto-edit pipeline that ingests media, detects scenes, transcribes speech, applies simple selection rules, and exports an MLT timeline for Kdenlive/Shotcut. Optional GPU offload now targets Beam Cloud services (superseding the previous Lightning AI setup).
 
 ## Quickstart (Local)
 
@@ -40,7 +40,7 @@ autoedit export-mlt runs/demo/artifacts/selection.json -o runs/demo/outputs/edit
 │  ├─ backends/
 │  │  ├─ base.py
 │  │  ├─ local/
-│  │  └─ lightning/
+│  │  └─ lightning/           # Beam Cloud remote client (rename pending)
 │  ├─ core/
 │  ├─ schemas/
 │  └─ exporters/
@@ -53,3 +53,5 @@ autoedit export-mlt runs/demo/artifacts/selection.json -o runs/demo/outputs/edit
 ```
 
 See `MVP-Global-Dev-Infrastructure-Plan.md` for the full plan.
+
+Beam Cloud integration notes live under `docs/beam/` (start with `docs/beam/getting-started.md`). Use `docs/beam/accounts.md` to wire multiple Beam accounts via environment variables.
