@@ -32,6 +32,35 @@ def _ensure_parent(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
 
 
+def _collect_beam_tokens() -> List[str]:
+    """Return Beam API tokens discovered in the environment for round-robin usage."""
+    tokens: List[str] = []
+    seen: set[str] = set()
+
+    grouped = sorted(
+        (
+            (name, value)
+            for name, value in os.environ.items()
+            if name.startswith("BEAM_API_TOKEN_") and value
+        ),
+        key=lambda item: item[0],
+    )
+    for _, value in grouped:
+        if value not in seen:
+            seen.add(value)
+            tokens.append(value)
+
+    csv_tokens = os.getenv("BEAM_API_KEYS")
+    if csv_tokens:
+        for item in csv_tokens.split(","):
+            candidate = item.strip()
+            if candidate and candidate not in seen:
+                seen.add(candidate)
+                tokens.append(candidate)
+
+    return tokens
+
+
 @app.command()
 def ingest(
     inputs: List[Path] = typer.Argument(..., exists=True, readable=True),
@@ -60,17 +89,19 @@ def cut(
 @app.command()
 def stt(
     audio: Path = typer.Argument(None, exists=True, dir_okay=False),
-    backend: str = typer.Option("local", help="Transcription backend: local|lightning"),
+    backend: str = typer.Option(
+        "local", help="Transcription backend: local|lightning (Beam remote)"
+    ),
     language: Optional[str] = typer.Option(None, help="Language code, e.g., en, fr"),
     model: str = typer.Option("medium", help="Whisper model size (local)"),
     output: Path = typer.Option(..., "-o", "--output", help="Output transcript.json path"),
     audio_url: Optional[str] = typer.Option(
         None,
-        help="When using backend=lightning, provide a presigned URL to audio",
+        help="When using backend=lightning (Beam), provide a presigned URL to audio",
     ),
     endpoint: Optional[str] = typer.Option(
         None,
-        help="Lightning service base URL; defaults to $LIGHTNING_BASE_URL",
+        help="Beam service base URL (env: $LIGHTNING_BASE_URL while we migrate)",
     ),
 ):
     """Transcribe audio to transcript.json using the selected backend."""
@@ -82,12 +113,20 @@ def stt(
         base_url = endpoint or os.getenv("LIGHTNING_BASE_URL")
         if not base_url:
             raise typer.BadParameter(
-                "Provide --endpoint or set LIGHTNING_BASE_URL for lightning backend."
+                "Provide --endpoint or set LIGHTNING_BASE_URL for the Beam backend "
+                "(alias: lightning)."
             )
         if not audio_url:
-            raise typer.BadParameter("Provide --audio-url for lightning backend (presigned).")
+            raise typer.BadParameter(
+                "Provide --audio-url for the Beam backend (use backend=lightning)."
+            )
+        beam_tokens = _collect_beam_tokens()
         transcriber = LightningTranscriber(
-            LightningConfig(base_url=base_url, api_key=os.getenv("LIGHTNING_API_KEY"))
+            LightningConfig(
+                base_url=base_url,
+                api_key=os.getenv("LIGHTNING_API_KEY"),
+                api_keys=beam_tokens or None,
+            )
         )
         transcript = transcriber.transcribe_url(audio_url, lang=language, model=model)
     _ensure_parent(output)
