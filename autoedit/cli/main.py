@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import os
-from typing import List, Optional
+from typing import Any, List, Optional
 
 import typer
 from rich import print
@@ -21,6 +21,7 @@ from autoedit.backends.lightning.transcriber import (
     LightningConfig,
     LightningTranscriber,
 )
+from autoedit.storage import load_storage_client
 
 
 install(show_locals=False)
@@ -59,6 +60,42 @@ def _collect_beam_tokens() -> List[str]:
                 tokens.append(candidate)
 
     return tokens
+
+
+def _load_config(config_path: Optional[Path]) -> dict:
+    path: Optional[Path] = None
+    if config_path:
+        path = config_path
+    else:
+        env_path = os.getenv("AUTOEDIT_CONFIG")
+        if env_path:
+            path = Path(env_path)
+
+    if not path:
+        return {}
+    if not path.exists():
+        raise typer.BadParameter(f"Config file not found: {path}")
+
+    try:
+        import yaml
+    except ImportError as exc:  # pragma: no cover - dependency missing
+        raise typer.BadParameter(
+            "PyYAML is required to read config files. Install with 'pip install PyYAML' "
+            "or use the [full] extra."
+        ) from exc
+
+    with path.open("r", encoding="utf-8") as fh:
+        data = yaml.safe_load(fh) or {}
+    if not isinstance(data, dict):
+        raise typer.BadParameter("Config file must contain a top-level mapping")
+    return data
+
+
+def _resolve_storage_client(config: dict) -> Optional[Any]:
+    storage_cfg = config.get("storage") if config else None
+    if not storage_cfg:
+        return None
+    return load_storage_client(storage_cfg)
 
 
 @app.command()
@@ -103,6 +140,9 @@ def stt(
         None,
         help="Beam service base URL (env: $LIGHTNING_BASE_URL while we migrate)",
     ),
+    config_path: Optional[Path] = typer.Option(
+        None, help="Path to config.yaml (defaults to $AUTOEDIT_CONFIG if set)"
+    ),
 ):
     """Transcribe audio to transcript.json using the selected backend."""
     console.rule("Transcription")
@@ -116,10 +156,20 @@ def stt(
                 "Provide --endpoint or set LIGHTNING_BASE_URL for the Beam backend "
                 "(alias: lightning)."
             )
+        config = _load_config(config_path)
+        storage_client = _resolve_storage_client(config)
         if not audio_url:
-            raise typer.BadParameter(
-                "Provide --audio-url for the Beam backend (use backend=lightning)."
-            )
+            if audio is None:
+                raise typer.BadParameter(
+                    "Provide an audio file path when uploading for the Beam backend."
+                )
+            if not storage_client:
+                raise typer.BadParameter(
+                    "Provide --audio-url or configure storage for the Beam backend "
+                    "(see docs/CLI.md)."
+                )
+            upload = storage_client.upload_file(audio)
+            audio_url = upload.url
         beam_tokens = _collect_beam_tokens()
         transcriber = LightningTranscriber(
             LightningConfig(
@@ -157,6 +207,9 @@ def pipeline(
     mlt_output: Optional[Path] = typer.Option(
         None, help="Optional explicit path for the generated MLT file"
     ),
+    config_path: Optional[Path] = typer.Option(
+        None, help="Path to config.yaml (defaults to $AUTOEDIT_CONFIG if set)"
+    ),
 ):
     """Run the full AutoEdit pipeline in one command."""
 
@@ -177,6 +230,9 @@ def pipeline(
 
     # Transcription
     transcript_path = artifacts_dir / "transcript.json"
+    config = _load_config(config_path)
+    storage_client = _resolve_storage_client(config)
+
     if backend == "local":
         transcriber = LocalTranscriber(model=model)
         transcript: Transcript = transcriber.transcribe(audio_path, language=language)
@@ -188,9 +244,13 @@ def pipeline(
                 "(alias: lightning)."
             )
         if not audio_url:
-            raise typer.BadParameter(
-                "Provide --audio-url for the Beam backend (use backend=lightning)."
-            )
+            if not storage_client:
+                raise typer.BadParameter(
+                    "Provide --audio-url or configure storage for the Beam backend "
+                    "(see docs/CLI.md)."
+                )
+            upload = storage_client.upload_file(audio_path, target_name=f"{run_dir.name}/main.flac")
+            audio_url = upload.url
         beam_tokens = _collect_beam_tokens()
         transcriber = LightningTranscriber(
             LightningConfig(

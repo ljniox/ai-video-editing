@@ -19,6 +19,11 @@ beam_api_tokens:
     env: BEAM_API_TOKEN_JNIOX
 
 storage:
-  provider: local  # local|s3|gcs
-  bucket: your-bucket
-  base_url: https://example.com/presigned
+  provider: local  # local|s3
+  bucket: your-bucket  # required when provider=s3
+  prefix: autoedit/runs  # optional path prefix for uploads
+  region: us-east-1
+  presign_expiration: 900
+  access_key: ${AWS_ACCESS_KEY_ID}
+  secret_key: ${AWS_SECRET_ACCESS_KEY}
+  endpoint_url: https://s3.amazonaws.com  # optional (MinIO/Beam storage)

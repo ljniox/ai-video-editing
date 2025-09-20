@@ -26,6 +26,7 @@ autoedit pipeline /path/to/input.mp4 -o runs/demo
 Environment requirements for Beam:
 - `LIGHTNING_BASE_URL`: Base URL of the Beam endpoint (e.g., `https://app.beam.cloud/endpoint/...`).
 - `LIGHTNING_API_KEY` or `BEAM_API_TOKEN_*`: Authentication tokens (the CLI automatically cycles multiple tokens when provided).
+- `--config config.yaml` (or `$AUTOEDIT_CONFIG`) enables automatic uploads; the config must define a `storage` block (see `config.example.yaml`).
 
 ## Testing & CI
 

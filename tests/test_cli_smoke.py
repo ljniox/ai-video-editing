@@ -9,6 +9,7 @@ from typer.testing import CliRunner
 from autoedit.cli.main import app
 from autoedit.schemas.sequences import Segment
 from autoedit.schemas.transcript import Transcript, TranscriptSegment
+from autoedit.storage.base import UploadResult
 
 
 runner = CliRunner()
@@ -148,3 +149,57 @@ def test_pipeline_command(cli_env):
 
     content = mlt_path.read_text()
     assert "mlt" in content.lower()
+
+
+def test_pipeline_lightning_upload(cli_env, monkeypatch):
+    run_dir = cli_env["run_dir"]
+    selection_path = cli_env["selection_path"]
+    mlt_path = cli_env["mlt_path"]
+    sample_file = cli_env["sample_file"]
+
+    uploaded: dict = {}
+
+    class FakeStorage:
+        def upload_file(self, local_path, *, target_name=None):
+            uploaded["path"] = local_path
+            uploaded["target"] = target_name
+            return UploadResult(url="https://example.com/audio.flac", key=target_name)
+
+    class FakeTranscriber:
+        def __init__(self, config):
+            self.config = config
+
+        def transcribe_url(self, audio_url, lang=None, model="medium"):
+            assert audio_url == "https://example.com/audio.flac"
+            return Transcript(
+                text="beam text",
+                segments=[TranscriptSegment(start=0.0, end=5.0, text="beam text")],
+            )
+
+    monkeypatch.setattr("autoedit.cli.main.LightningTranscriber", FakeTranscriber)
+    monkeypatch.setattr("autoedit.cli.main.load_storage_client", lambda cfg: FakeStorage())
+    monkeypatch.setattr(
+        "autoedit.cli.main._load_config", lambda path: {"storage": {"provider": "s3"}}
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "pipeline",
+            str(sample_file),
+            "-o",
+            str(run_dir),
+            "--backend",
+            "lightning",
+            "--endpoint",
+            "https://beam.example/api",
+        ],
+    )
+    assert result.exit_code == 0, result.output
+
+    assert uploaded["path"].name == "main.flac"
+    assert selection_path.exists()
+    assert mlt_path.exists()
+
+    selection = json.loads(selection_path.read_text())
+    assert selection["shots"], "pipeline (beam) selection should contain shots"

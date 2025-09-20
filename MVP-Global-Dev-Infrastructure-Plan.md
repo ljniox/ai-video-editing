@@ -88,6 +88,7 @@ This document defines the development workflow, environment setup, architecture,
       api_key: ${LIGHTNING_API_KEY}  # use Beam key; env name kept for compatibility
       timeout_s: 60`
   - `beam_api_tokens`: optional list of Beam accounts with `env` keys (see `docs/beam/accounts.md`).
+  - `storage`: configure uploads when Beam requires presigned URLs (e.g., `provider: s3`, `bucket`, `prefix`, `presign_expiration`).
   - `storage:
       provider: s3|gcs|local
       bucket: <bucket-name>
@@ -139,6 +140,7 @@ This document defines the development workflow, environment setup, architecture,
   - Direct FFmpeg render from selection: `autoedit render runs/<id>/selection.json -o outputs/final.mp4`
 - Pipeline Helper
   - Single command orchestration: `autoedit pipeline /path/to/input.mp4 -o runs/<id>/`
+  - Provide `--config config.yaml` when running with Beam backend to auto-upload audio to S3/Beam storage.
 
 ---
 

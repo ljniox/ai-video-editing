@@ -41,6 +41,12 @@ autoedit pipeline /path/to/input.mp4 -o runs/demo
 
 Use flags like `--backend lightning`, `--language`, `--min-len`, or `--max-len` to customise behaviour. Remote Beam runs require the environment variables described below (`LIGHTNING_BASE_URL`, `LIGHTNING_API_KEY`, `BEAM_API_TOKEN_*`).
 
+If you do not already have a presigned audio URL, provide a config file with storage credentials and the CLI will upload the audio automatically:
+
+```
+autoedit pipeline /path/to/input.mp4 -o runs/demo --backend lightning --endpoint https://beam.example --config config.yaml
+```
+
 ## Layout
 
 ```
