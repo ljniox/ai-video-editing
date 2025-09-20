@@ -135,6 +135,103 @@ def stt(
 
 
 @app.command()
+def pipeline(
+    inputs: List[Path] = typer.Argument(..., exists=True, readable=True),
+    run_dir: Path = typer.Option(..., "-o", "--output", help="Run directory, e.g. runs/demo"),
+    backend: str = typer.Option(
+        "local", help="Transcription backend: local|lightning (Beam remote)"
+    ),
+    language: Optional[str] = typer.Option(None, help="Language code, e.g., en, fr"),
+    model: str = typer.Option("medium", help="Whisper model size (local)"),
+    audio_url: Optional[str] = typer.Option(
+        None,
+        help="When using backend=lightning (Beam), provide a presigned URL to audio",
+    ),
+    endpoint: Optional[str] = typer.Option(
+        None,
+        help="Beam service base URL (env: $LIGHTNING_BASE_URL while we migrate)",
+    ),
+    speech_only: bool = typer.Option(False, help="Keep only segments with detected speech"),
+    min_len: float = typer.Option(0.0, help="Drop shots shorter than this (seconds)"),
+    max_len: float = typer.Option(0.0, help="Trim shots longer than this (seconds)"),
+    mlt_output: Optional[Path] = typer.Option(
+        None, help="Optional explicit path for the generated MLT file"
+    ),
+):
+    """Run the full AutoEdit pipeline in one command."""
+
+    console.rule("AutoEdit Pipeline")
+
+    ingest_media(inputs, run_dir)
+
+    artifacts_dir = run_dir / "artifacts"
+    raw_dir = run_dir / "raw"
+    audio_path = run_dir / "audio" / "main.flac"
+
+    # Scene detection
+    sequences_path = artifacts_dir / "sequences.json"
+    segments = detect_scenes(raw_dir)
+    sequences = Sequences(segments=segments)
+    _ensure_parent(sequences_path)
+    sequences_path.write_text(sequences.model_dump_json(indent=2))
+
+    # Transcription
+    transcript_path = artifacts_dir / "transcript.json"
+    if backend == "local":
+        transcriber = LocalTranscriber(model=model)
+        transcript: Transcript = transcriber.transcribe(audio_path, language=language)
+    else:
+        base_url = endpoint or os.getenv("LIGHTNING_BASE_URL")
+        if not base_url:
+            raise typer.BadParameter(
+                "Provide --endpoint or set LIGHTNING_BASE_URL for the Beam backend "
+                "(alias: lightning)."
+            )
+        if not audio_url:
+            raise typer.BadParameter(
+                "Provide --audio-url for the Beam backend (use backend=lightning)."
+            )
+        beam_tokens = _collect_beam_tokens()
+        transcriber = LightningTranscriber(
+            LightningConfig(
+                base_url=base_url,
+                api_key=os.getenv("LIGHTNING_API_KEY"),
+                api_keys=beam_tokens or None,
+            )
+        )
+        transcript = transcriber.transcribe_url(audio_url, lang=language, model=model)
+
+    _ensure_parent(transcript_path)
+    transcript_path.write_text(transcript.model_dump_json(indent=2))
+
+    # Selection
+    selection = select_segments(
+        artifacts_dir,
+        speech_only=speech_only,
+        min_len=min_len,
+        max_len=max_len,
+    )
+    selection_path = artifacts_dir / "selection.json"
+    _ensure_parent(selection_path)
+    selection_path.write_text(selection.model_dump_json(indent=2))
+
+    # Export MLT
+    final_mlt = mlt_output or run_dir / "outputs" / "edit.mlt"
+    _ensure_parent(final_mlt)
+    export_mlt(selection, output_path=final_mlt)
+
+    print(
+        {
+            "run_dir": str(run_dir),
+            "sequences": str(sequences_path),
+            "transcript": str(transcript_path),
+            "selection": str(selection_path),
+            "mlt": str(final_mlt),
+        }
+    )
+
+
+@app.command()
 def select(
     artifacts_dir: Path = typer.Argument(..., exists=True, file_okay=False),
     output: Path = typer.Option(..., "-o", "--output", help="Output selection.json path"),

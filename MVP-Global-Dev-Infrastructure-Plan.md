@@ -137,6 +137,8 @@ This document defines the development workflow, environment setup, architecture,
   - CLI: `autoedit export-mlt runs/<id>/selection.json -o outputs/edit.mlt`
 - Optional Render
   - Direct FFmpeg render from selection: `autoedit render runs/<id>/selection.json -o outputs/final.mp4`
+- Pipeline Helper
+  - Single command orchestration: `autoedit pipeline /path/to/input.mp4 -o runs/<id>/`
 
 ---
 

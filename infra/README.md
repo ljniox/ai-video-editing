@@ -1,6 +1,6 @@
 Infrastructure and CI placeholders.
 
 Suggested next steps:
-- GitHub Actions for lint/test
+- Monitor `.github/workflows/python-ci.yml` (runs lint + pytest on pushes/PRs)
 - Docker build for services
 - Beam Cloud app/work manifests

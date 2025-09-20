@@ -31,6 +31,16 @@ autoedit select runs/demo/artifacts -o runs/demo/artifacts/selection.json
 autoedit export-mlt runs/demo/artifacts/selection.json -o runs/demo/outputs/edit.mlt
 ```
 
+## Pipeline Shortcut
+
+Run the entire workflow with one command (defaults to the local backend):
+
+```
+autoedit pipeline /path/to/input.mp4 -o runs/demo
+```
+
+Use flags like `--backend lightning`, `--language`, `--min-len`, or `--max-len` to customise behaviour. Remote Beam runs require the environment variables described below (`LIGHTNING_BASE_URL`, `LIGHTNING_API_KEY`, `BEAM_API_TOKEN_*`).
+
 ## Layout
 
 ```
